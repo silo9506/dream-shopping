@@ -10,7 +10,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { authContextValues, userCredentials } from "types/auth";
 import firebase from "firebase/compat/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { get, onValue, ref, runTransaction } from "firebase/database";
+import { get, onValue, ref } from "firebase/database";
 import { useDb } from "hooks/useDb";
 
 const AuthContext = createContext<authContextValues | undefined>(undefined);
@@ -25,20 +25,21 @@ export const AuthProvider = ({ children }: props) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
   const [error, setError] = useState<null | string>(null);
   const [dbUser, setDbuser] = useState<{ [key: string]: any }>([]);
+  const [userCart, setUserCart] = useState<any[]>([]);
   const { setDb } = useDb();
 
   useEffect(() => {
-    // setIsloding(true);
     const unsubscribe = onAuthStateChanged(AUTH, async (user: any) => {
-      console.log(user);
       if (user) {
         const uid = user.uid;
         const userRef = ref(DB, `user/${uid}`);
+        const userCartRef = ref(DB, `cart/${uid}`);
         const seller = false;
-        const { email, displayName } = user.providerData[0];
+        const { email, displayName } = user;
+
         await setDb({
           Route: `user/${uid}`,
-          data: { email, displayName, seller },
+          data: { email, seller, displayName },
         });
 
         const snapshot = await get(userRef);
@@ -48,6 +49,10 @@ export const AuthProvider = ({ children }: props) => {
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setDbuser(data);
+        });
+        onValue(userCartRef, (snapshot) => {
+          const data = snapshot.val();
+          setUserCart(data);
         });
       }
       setCurrentUser(user as firebase.User);
@@ -119,11 +124,8 @@ export const AuthProvider = ({ children }: props) => {
     isloding,
     dbUser,
     setDbuser,
+    userCart,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!isloding && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

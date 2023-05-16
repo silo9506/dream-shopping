@@ -65,6 +65,8 @@ export default function Header({ toggleModal, toggleCart }: props) {
             <MdSell size={20} />
             <span className="text-[10px]">판매</span>
           </button>
+          {currentUser && <button>{currentUser.displayName}</button>}
+
           <button
             onClick={onClikcCart}
             className=" p-[2px]  w-[35px] h-[35px]  "

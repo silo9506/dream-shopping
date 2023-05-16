@@ -22,9 +22,7 @@ export const AUTH = getAuth(app);
 export const DB = getDatabase(app);
 
 setPersistence(AUTH, browserSessionPersistence)
-  .then(() => {
-    // console.log("세션 지속성이 설정되었습니다.");
-  })
+  .then(() => {})
   .catch((error) => {
     console.log("세션 지속성 설정 중 오류가 발생했습니다.", error);
   });

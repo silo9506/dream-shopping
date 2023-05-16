@@ -40,8 +40,6 @@ export const ProductProvider = ({ children }: props) => {
   const value = { loading, products };
 
   return (
-    <productContext.Provider value={value}>
-      {!loading && children}
-    </productContext.Provider>
+    <productContext.Provider value={value}>{children}</productContext.Provider>
   );
 };

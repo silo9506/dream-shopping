@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "components/molecules/Header";
 import { Outlet } from "react-router-dom";
 import Modal from "components/templates/Modal";
-import Cart from "components/molecules/Cart";
+import Cart from "components/templates/Cart";
 import Backdrop from "components/atoms/Backdrop";
 
 export default function Index() {
@@ -19,7 +19,7 @@ export default function Index() {
   };
 
   return (
-    <div className="bg-[#f5f5f5]">
+    <div className="bg-[#f5f5f5] min-h-screen">
       <Backdrop
         toggleCart={toggleCart}
         onCart={onCart}

@@ -30,14 +30,19 @@ export default function AddProduct() {
   useEffect(() => {
     if (uploaded)
       setImgList((prev) => {
-        const list = [...prev, uploaded];
+        const list = [...prev, ...uploaded];
 
         return [...new Set(list)];
       });
   }, [uploaded]);
 
   const fileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    await uploadImage(e.target.files?.[0]);
+    const fileList = Array.from(e.target.files || []);
+
+    if (imgList.length + fileList.length > 5) {
+      return alert("5개 이상 업로드는 불가능합니다.");
+    }
+    await uploadImage(fileList);
     e.target.value = "";
   };
 
@@ -68,8 +73,6 @@ export default function AddProduct() {
     navigate("/");
   };
 
-  console.log(category);
-
   return (
     <div>
       <h1 className="text-xl text-center ">새로운 상품 등록</h1>
@@ -84,6 +87,7 @@ export default function AddProduct() {
         <div className="flex flex-col items-center justify-center gap-2">
           <h5>최소 1장 최대5장의 상품사진을 등록할 수 있습니다.</h5>
           <input
+            multiple
             ref={fileRef}
             type="file"
             className="hidden"
@@ -93,7 +97,7 @@ export default function AddProduct() {
             type="button"
             onClick={() => fileRef.current?.click()}
             className="bg-[#00ff7f] p-1 rounded max-w-[40ch] w-full disabled:bg-slate-600 "
-            disabled={imgList.length > 5}
+            disabled={imgList.length >= 5}
           >
             사진 등록
           </button>
@@ -111,6 +115,7 @@ export default function AddProduct() {
           placeholder="가격"
           value={price?.toString() || ""}
           type="number"
+          min={1}
           onChange={(e) => {
             const parsedValue = parseInt(e.target.value);
             if (!isNaN(parsedValue)) {

@@ -76,7 +76,10 @@ export default function Carousel({ items, deleteImg }: props) {
           >
             {deleteImg !== undefined && (
               <MdCancel
-                onClick={() => deleteImg(item)}
+                onClick={() => {
+                  deleteImg(item);
+                  setActiveIndex(1);
+                }}
                 size={20}
                 className="absolute top-2 right-2"
               />
@@ -101,6 +104,23 @@ export default function Carousel({ items, deleteImg }: props) {
           >
             다음
           </button>
+
+          <div className="absolute bottom-[0px] right-[50%] flex translate-x-[50%] translate-y-[-50%] gap-3 ">
+            {items.map((item, index: number) => (
+              <div
+                key={item}
+                onClick={() => {
+                  setActiveIndex(index + 1);
+                  setAnimate(true);
+                }}
+                className={`w-[15px] h-[15px] border  border-solid  cursor-pointer  rounded-full border-white  ${
+                  animate
+                    ? "duration-200 transition-colors delay-300"
+                    : "duration-0 delay-0"
+                }   ${index === activeIndex - 1 ? "bg-black " : "bg-white "}`}
+              />
+            ))}
+          </div>
         </>
       )}
     </div>

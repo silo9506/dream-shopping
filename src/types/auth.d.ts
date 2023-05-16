@@ -7,6 +7,7 @@ export interface userCredentials {
 
 export interface authContextValues {
   //   currentUser: firebase.User | null;
+  userCart: any[];
   login: ({
     email,
     password,
