@@ -1,5 +1,5 @@
 import CarouselItem from "components/atoms/CarouselItem";
-import useThrottle from "hooks/useThrottle";
+import useThrottle from "util/useThrottle";
 import React, { useState, useEffect } from "react";
 import { MdCancel } from "react-icons/md";
 import { BsDot } from "react-icons/bs";

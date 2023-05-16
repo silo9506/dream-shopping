@@ -7,14 +7,13 @@ import {
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCTRnWxdPOQI0D3lko57d4EuBfR8w1TTSc",
-  authDomain: "dream-shopping-548c4.firebaseapp.com",
-  projectId: "dream-shopping-548c4",
-  storageBucket: "dream-shopping-548c4.appspot.com",
-  messagingSenderId: "687315412012",
-  appId: "1:687315412012:web:0819afcd8adbf1d1741d89",
-  databaseURL:
-    "https://dream-shopping-548c4-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGEBUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGINGSENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
 };
 
 const app = initializeApp(firebaseConfig);

@@ -37,15 +37,18 @@ export const AuthProvider = ({ children }: props) => {
         const seller = false;
         const { email, displayName } = user;
 
+        console.log(AUTH?.currentUser?.displayName);
+        console.log(user);
+        console.log(user.displayName);
         await setDb({
           Route: `user/${uid}`,
           data: { email, seller, displayName },
         });
 
-        const snapshot = await get(userRef);
-        // val은 변환해주는 메소드
-        const userData = await snapshot.val();
-        setDbuser(userData);
+        // const snapshot = await get(userRef);
+        // // val은 변환해주는 메소드
+        // const userData = await snapshot.val();
+        // setDbuser(userData);
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setDbuser(data);
