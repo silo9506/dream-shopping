@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: props) => {
   const [error, setError] = useState<null | string>(null);
   const [dbUser, setDbuser] = useState<{ [key: string]: any }>([]);
   const [userCart, setUserCart] = useState<any[]>([]);
-  const { setDb } = useDb();
+  const { updateDb, setDb } = useDb();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(AUTH, async (user: any) => {
@@ -37,18 +37,16 @@ export const AuthProvider = ({ children }: props) => {
         const seller = false;
         const { email, displayName } = user;
 
-        console.log(AUTH?.currentUser?.displayName);
-        console.log(user);
-        console.log(user.displayName);
-        await setDb({
-          Route: `user/${uid}`,
-          data: { email, seller, displayName },
-        });
+        const snapshot = await get(userRef);
+        const userData = await snapshot.val();
 
-        // const snapshot = await get(userRef);
-        // // val은 변환해주는 메소드
-        // const userData = await snapshot.val();
-        // setDbuser(userData);
+        if (!userData) {
+          await setDb({
+            Route: `user/${uid}`,
+            data: { email, seller, displayName },
+          });
+        }
+
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setDbuser(data);
@@ -78,15 +76,21 @@ export const AuthProvider = ({ children }: props) => {
         password
       );
       const user = userCredential.user;
-
       await updateProfile(user, {
         displayName,
         photoURL,
       });
 
-      return userCredential;
+      updateDb({
+        Route: `user/${user.uid}`,
+        data: {
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+      });
     } catch (error: any) {
       setError(error.message);
+      console.log(error);
     }
   };
 
@@ -130,5 +134,9 @@ export const AuthProvider = ({ children }: props) => {
     userCart,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!isloding && children}
+    </AuthContext.Provider>
+  );
 };

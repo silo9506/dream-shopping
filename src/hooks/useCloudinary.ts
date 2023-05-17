@@ -14,28 +14,17 @@ const useCloudinary = ({ uid }: Props) => {
   const apiKey = process.env.REACT_APP_CLOUD_API_KEY as string;
   const apiSecret = process.env.REACT_APP_CLOUD_API_SECRET;
 
-  const uploadImage = async (files: File[]) => {
+  const uploadImage = async (imageUrls: string[]) => {
     setError(null);
-    if (files.length > 5) {
-      return setError("5개 이상 업로드는 불가능합니다.");
-    }
-
-    for (const file of files) {
-      const extension = file.name.split(".").pop()?.toLowerCase();
-
-      if (!fileExtension.includes(`${extension}`)) {
-        return setError("이미지 파일만 업로드할 수 있습니다.");
-      }
-    }
 
     const uploadUrls = [];
 
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < imageUrls.length; i++) {
       const data = new FormData();
       data.append("api_key", apiKey);
       data.append("upload_preset", "wlqpvsbd");
       data.append("folder", uid);
-      data.append("file", files[i]);
+      data.append("file", imageUrls[i]);
 
       const res = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
@@ -55,16 +44,10 @@ const useCloudinary = ({ uid }: Props) => {
     setLoading(false);
   };
 
-  const clearUploaded = () => {
-    setUploaded(null);
-  };
-
   return {
     uploaded,
     uploadImage,
-    error,
     loading,
-    clearUploaded,
   };
 };
 

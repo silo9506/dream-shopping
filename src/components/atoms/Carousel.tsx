@@ -108,7 +108,7 @@ export default function Carousel({ items, deleteImg }: props) {
           <div className="absolute bottom-[0px] right-[50%] flex translate-x-[50%] translate-y-[-50%] gap-3 ">
             {items.map((item, index: number) => (
               <div
-                key={item}
+                key={item + index}
                 onClick={() => {
                   setActiveIndex(index + 1);
                   setAnimate(true);

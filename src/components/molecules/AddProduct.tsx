@@ -19,21 +19,32 @@ export default function AddProduct() {
   const [category, setCategory] = useState("");
   const navigate = useNavigate();
   const { number } = useParams();
-  const { uploaded, uploadImage, error, loading, clearUploaded } =
-    useCloudinary({ uid: currentUser.uid });
-  const { setDb } = useDb();
+  const { uploaded, uploadImage, loading } = useCloudinary({
+    uid: currentUser.uid,
+  });
+  const { updateDb, setDb } = useDb();
 
   useEffect(() => {
-    error && alert(error);
-  }, [error]);
-
-  useEffect(() => {
-    if (uploaded)
-      setImgList((prev) => {
-        const list = [...prev, ...uploaded];
-
-        return [...new Set(list)];
+    const dbUpdate = async () => {
+      await setDb({
+        Route: `product`,
+        data: [
+          {
+            key: currentUser?.uid + number,
+            imgs: imgList,
+            name: productName,
+            price,
+            description,
+            option,
+            category,
+          },
+        ],
       });
+      navigate("/");
+    };
+    if (uploaded) {
+      dbUpdate();
+    }
   }, [uploaded]);
 
   const fileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,35 +53,45 @@ export default function AddProduct() {
     if (imgList.length + fileList.length > 5) {
       return alert("5개 이상 업로드는 불가능합니다.");
     }
-    await uploadImage(fileList);
+
+    const newImgList: string[] = [];
+    const fileExtension = ["png", "jpg", "jpeg"];
+
+    for (const file of fileList) {
+      const reader = new FileReader();
+
+      const extension = file.name.split(".").pop()?.toLowerCase();
+
+      if (extension && fileExtension.includes(extension)) {
+        reader.onload = (event) => {
+          if (typeof event.target?.result === "string") {
+            newImgList.push(event.target?.result);
+
+            if (newImgList.length === fileList.length) {
+              setImgList((prevImgList) => [...prevImgList, ...newImgList]);
+            }
+          }
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        alert("이미지 파일만 업로드가 가능합니다.");
+      }
+    }
     e.target.value = "";
   };
 
   const deleteImg = (url: string) => {
     setImgList((prev) => prev.filter((item) => item !== url));
-    clearUploaded();
   };
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (imgList.length < 1) {
       return alert("최소 1장의 사진을 등록해주세요");
     }
-    setDb({
-      Route: `product`,
-      data: [
-        {
-          key: currentUser?.uid + number,
-          imgs: imgList,
-          name: productName,
-          price,
-          description,
-          option,
-          category,
-        },
-      ],
-    });
-    navigate("/");
+    await uploadImage(imgList);
   };
 
   return (

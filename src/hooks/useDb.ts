@@ -1,61 +1,52 @@
 import { DB } from "myfirebase";
-import { get, ref, runTransaction, set } from "firebase/database";
+import { get, ref, runTransaction, set, update } from "firebase/database";
 
-interface setDbProps {
+interface Fnargument {
   Route: string;
   data?: any;
-  porduct?: boolean;
+  newdata?: any;
 }
 
 export const useDb = () => {
-  const setDb = async ({ Route, data }: setDbProps) => {
+  const setDb = async ({ Route, data }: Fnargument) => {
     const userRef = ref(DB, Route);
-    await runTransaction(userRef, (userData) => {
+    const snapshot = await get(userRef);
+    const userData = await snapshot.val();
+
+    try {
       if (userData === null) {
-        return data;
+        return set(userRef, data);
       }
-      if (Array.isArray(userData)) {
-        const newData = [...userData, ...data];
-        return newData;
-      }
-      return;
-    }).catch((error) => {
-      alert(error);
-    });
-  };
-
-  const updateDb = async ({ Route, data, porduct }: setDbProps) => {
-    const userRef = ref(DB, Route);
-
-    await runTransaction(userRef, (userData) => {
-      if (userData === null) {
-        return data;
-      }
-
-      if (porduct) {
+      if (data[0].selectOption) {
         const overlap = userData.find(
           (item: any) =>
             data[0].key + data[0].selectOption === item.key + item.selectOption
         );
-
         if (overlap) {
           return alert("장바구니에 보관중인 아이템입니다.");
         }
       }
 
       if (Array.isArray(userData)) {
-        const newData = [...userData, ...data];
-        return newData;
+        return set(userRef, [...userData, ...data]);
       }
-
-      const newData = { ...userData, ...data };
-      return newData;
-    }).catch((error) => {
+    } catch (error) {
       alert(error);
-    });
+    }
   };
 
-  const deleteDb = async ({ Route, data }: setDbProps) => {
+  const updateDb = async ({ Route, data }: Fnargument) => {
+    const userRef = ref(DB, Route);
+
+    try {
+      await update(userRef, data);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  const deleteDb = async ({ Route, data }: Fnargument) => {
     const userRef = ref(DB, Route);
     const snapshot = await get(userRef);
     const userData = await snapshot.val();
@@ -69,7 +60,7 @@ export const useDb = () => {
     await set(userRef, [...newData]);
   };
 
-  const changeDb = async ({ Route, data }: setDbProps) => {
+  const changeDb = async ({ Route, data, newdata }: Fnargument) => {
     const userRef = ref(DB, Route);
     const snapshot = await get(userRef);
     const userData = await snapshot.val();
@@ -78,12 +69,13 @@ export const useDb = () => {
       (item: any) =>
         item.key + item.selectOption === data.key + data.selectOption
     );
-    activeData.quantity = data.quantity;
 
-    console.log(userData);
+    if (activeData) {
+      activeData[newdata] = data[newdata];
 
-    await set(userRef, userData);
+      await set(userRef, userData);
+    }
   };
 
-  return { setDb, updateDb, deleteDb, changeDb };
+  return { deleteDb, changeDb, updateDb, setDb };
 };

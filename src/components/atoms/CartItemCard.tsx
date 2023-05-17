@@ -8,6 +8,7 @@ interface Props {
 }
 export default function CartItemCard({ item }: Props) {
   const [quantity, setQuantity] = useState(item.quantity);
+
   const { products } = useProduct();
   const { currentUser } = useAuth();
   const { deleteDb, changeDb } = useDb();
@@ -23,6 +24,7 @@ export default function CartItemCard({ item }: Props) {
         quantity: e.target.value,
         selectOption: item.selectOption,
       },
+      newdata: "quantity",
     });
   };
 

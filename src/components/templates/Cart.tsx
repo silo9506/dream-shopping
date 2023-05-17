@@ -12,6 +12,7 @@ export default function Cart({ toggleCart, onCart }: prop) {
   useScrollStop(onCart);
   const { userCart } = useAuth();
 
+  console.log(userCart);
   return (
     <div
       className={`transition-transform duration-300 z-50 w-[40vw] pt-20 bg-white min-h-[100vh] fixed top-0 right-0 ${

@@ -15,14 +15,13 @@ export default function Product() {
     (product: { [key: string]: any }) => product.key === param.key
   );
   const [quantity, setQuantity] = useState<number>(1);
-  const { updateDb, setDb } = useDb();
+  const { setDb } = useDb();
 
   const onClikcCart = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateDb({
+    await setDb({
       Route: `cart/${currentUser.uid}`,
       data: [{ key: product.key, quantity, selectOption }],
-      porduct: true,
     });
   };
 
