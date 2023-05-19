@@ -11,26 +11,29 @@ import Product from "pages/Product";
 function Router() {
   const { dbUser } = useAuth();
 
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Index />,
-      children: [
-        {
-          index: true,
-          element: <Home />,
-        },
-        {
-          element: dbUser.seller ? <Seller /> : <Navigate to="/" />,
-          path: "seller/:number",
-        },
-        {
-          element: <Product />,
-          path: "product/:key",
-        },
-      ],
-    },
-  ]);
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: <Index />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            element: dbUser.seller ? <Seller /> : <Navigate to="/" />,
+            path: "seller/:number",
+          },
+          {
+            element: <Product />,
+            path: "product/:key",
+          },
+        ],
+      },
+    ],
+    { basename: process.env.PUBLIC_URL }
+  );
 
   return <RouterProvider router={router} />;
 }
