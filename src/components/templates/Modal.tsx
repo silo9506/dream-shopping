@@ -1,6 +1,5 @@
 import AuthForm from "components/molecules/AuthForm";
 import SellerForm from "components/molecules/SellerForm";
-import React, { useEffect, useState } from "react";
 
 import useScrollStop from "util/useScrollStop";
 

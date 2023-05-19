@@ -9,17 +9,7 @@ import { useAuth } from "modules/AuthContext";
 import Seller from "pages/Seller";
 import Product from "pages/Product";
 function Router() {
-  const {
-    signup,
-    login,
-    logout,
-    googleLogin,
-    currentUser,
-    error,
-    isloding,
-    dbUser,
-    setDbuser,
-  } = useAuth();
+  const { dbUser } = useAuth();
 
   const router = createBrowserRouter([
     {

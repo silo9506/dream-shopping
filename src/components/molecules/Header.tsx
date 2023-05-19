@@ -8,6 +8,7 @@ import { useAuth } from "modules/AuthContext";
 import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useyyyyMMddhhmmss } from "util/useyyyyMMddhhmmss";
+import { useCart } from "modules/CartContext";
 interface props {
   toggleModal: (value: string | null) => void;
   toggleCart: () => void;
@@ -17,7 +18,9 @@ export default function Header({ toggleModal, toggleCart }: props) {
   const { currentUser, logout, dbUser } = useAuth();
   const navigate = useNavigate();
   const key = useyyyyMMddhhmmss();
+  const { userCart } = useCart();
 
+  console.log(userCart?.length);
   const onClikcCart = () => {
     if (!currentUser) {
       alert("로그인 후 이용 가능합니다.");
@@ -69,8 +72,11 @@ export default function Header({ toggleModal, toggleCart }: props) {
 
           <button
             onClick={onClikcCart}
-            className=" p-[2px]  w-[35px] h-[35px]  "
+            className=" p-[2px]  w-[35px] h-[35px] relative  "
           >
+            <div className="absolute top-[-2px] right-[-2px] flex items-center justify-center w-5 h-5 bg-red-500 border rounded-full">
+              <h5 className="text-sm text-white">{userCart?.length}</h5>
+            </div>
             <GiShoppingCart className="w-full h-full fill-black " />
           </button>
           {currentUser ? (

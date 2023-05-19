@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import imgicon from "assets/img/imgicon.png";
 import useCloudinary from "hooks/useCloudinary";
-import ProductSample from "components/atoms/ProductSample";
 import { useAuth } from "modules/AuthContext";
 import { useDb } from "hooks/useDb";
 import { useNavigate, useParams } from "react-router-dom";
@@ -22,7 +21,7 @@ export default function AddProduct() {
   const { uploaded, uploadImage, loading } = useCloudinary({
     uid: currentUser.uid,
   });
-  const { updateDb, setDb } = useDb();
+  const { setDb } = useDb();
 
   useEffect(() => {
     const dbUpdate = async () => {
@@ -98,9 +97,9 @@ export default function AddProduct() {
     <div>
       <h1 className="text-xl text-center ">새로운 상품 등록</h1>
       <form className="flex flex-col gap-2 px-4 mt-4" onSubmit={onSubmit}>
-        <div className="flex flex-col items-center justify-center w-[400px] h-auto mx-auto  gap-2">
+        <div className="flex flex-col items-center justify-center w-full max-w-[400px]  h-[400px]  gap-2 mx-auto">
           {imgList.length < 1 ? (
-            <img src={imgicon} alt="product" className="h-full max-h-[200px]" />
+            <img src={imgicon} alt="product" className="h-[300px] " />
           ) : (
             <Carousel items={imgList} deleteImg={deleteImg} />
           )}
@@ -127,7 +126,7 @@ export default function AddProduct() {
           required
           className="w-full p-1 border-black border-solid border-[1px]"
           placeholder="제품명"
-          onChange={(e) => setProductName(e.target.value)}
+          onChange={(e) => setProductName(e.target.value.trimStart())}
           value={productName}
         ></input>
         <input
@@ -171,7 +170,16 @@ export default function AddProduct() {
         <input
           required
           value={option}
-          onChange={(e) => setOption([e.target.value])}
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            const options = inputValue.split(",").map(
+              (option) => option.trimStart()
+              // option.trimEnd();
+            );
+            console.log(options);
+            setOption(options);
+            // setOption([inputValue]);
+          }}
           className="w-full p-1 border-black border-solid border-[1px]"
           placeholder="옵션들(콤마(,)로구분)"
         ></input>

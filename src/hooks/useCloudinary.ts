@@ -9,10 +9,8 @@ const useCloudinary = ({ uid }: Props) => {
   const [uploaded, setUploaded] = useState<string[] | null>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const fileExtension = ["png", "jpg", "jpeg"];
   const cloudName = process.env.REACT_APP_CLOUD_NAME;
   const apiKey = process.env.REACT_APP_CLOUD_API_KEY as string;
-  const apiSecret = process.env.REACT_APP_CLOUD_API_SECRET;
 
   const uploadImage = async (imageUrls: string[]) => {
     setError(null);

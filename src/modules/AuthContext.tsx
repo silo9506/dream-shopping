@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: props) => {
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
   const [error, setError] = useState<null | string>(null);
   const [dbUser, setDbuser] = useState<{ [key: string]: any }>([]);
-  const [userCart, setUserCart] = useState<any[]>([]);
   const { updateDb, setDb } = useDb();
 
   useEffect(() => {
@@ -33,7 +32,6 @@ export const AuthProvider = ({ children }: props) => {
       if (user) {
         const uid = user.uid;
         const userRef = ref(DB, `user/${uid}`);
-        const userCartRef = ref(DB, `cart/${uid}`);
         const seller = false;
         const { email, displayName } = user;
 
@@ -50,10 +48,6 @@ export const AuthProvider = ({ children }: props) => {
         onValue(userRef, (snapshot) => {
           const data = snapshot.val();
           setDbuser(data);
-        });
-        onValue(userCartRef, (snapshot) => {
-          const data = snapshot.val();
-          setUserCart(data);
         });
       }
       setCurrentUser(user as firebase.User);
@@ -131,7 +125,6 @@ export const AuthProvider = ({ children }: props) => {
     isloding,
     dbUser,
     setDbuser,
-    userCart,
   };
 
   return (

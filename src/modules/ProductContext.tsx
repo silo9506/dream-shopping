@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { get, onValue, ref, runTransaction } from "firebase/database";
+import { off, onValue, ref } from "firebase/database";
 import { DB } from "myfirebase";
 
 interface ProductContextValue {
-  loading: boolean;
+  isloding: boolean;
   products: any[];
 }
 
 const productContext = createContext<ProductContextValue>({
-  loading: true,
+  isloding: true,
   products: [],
 });
 export const useProduct = () => useContext(productContext);
@@ -17,31 +17,31 @@ interface props {
   children: React.ReactNode;
 }
 export const ProductProvider = ({ children }: props) => {
-  const [loading, setLoading] = useState(true);
+  const [isloding, setIsloding] = useState(true);
   const [products, setProduct] = useState<any[]>([]);
   const productRef = ref(DB, `product`);
 
   useEffect(() => {
-    setLoading(true);
+    setIsloding(true);
     const onValueChange = (snapshot: any) => {
       if (snapshot) {
         const data = snapshot.val();
         setProduct(data);
-        setLoading(false);
+        setIsloding(false);
       }
     };
     onValue(productRef, onValueChange);
 
     return () => {
-      onValue(productRef, onValueChange);
+      off(productRef, "value", onValueChange);
     };
   }, []);
 
-  const value = { loading, products };
+  const value = { isloding, products };
 
   return (
     <productContext.Provider value={value}>
-      {!loading && children}
+      {!isloding && children}
     </productContext.Provider>
   );
 };

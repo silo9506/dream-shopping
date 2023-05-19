@@ -4,12 +4,15 @@ import "./index.css";
 import Router from "./Router";
 import { AuthProvider } from "modules/AuthContext";
 import { ProductProvider } from "modules/ProductContext";
+import CartProvider from "modules/CartContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 root.render(
   <AuthProvider>
     <ProductProvider>
-      <Router />
+      <CartProvider>
+        <Router />
+      </CartProvider>
     </ProductProvider>
   </AuthProvider>
   // <React.StrictMode>

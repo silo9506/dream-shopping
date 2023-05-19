@@ -1,14 +1,18 @@
 import Carousel from "components/atoms/Carousel";
 import { useProduct } from "modules/ProductContext";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 import { BsFillArrowUpSquareFill, BsArrowDownSquareFill } from "react-icons/bs";
 import { useDb } from "hooks/useDb";
 import { useAuth } from "modules/AuthContext";
 
+interface OutletConText {
+  toggleCart: () => void;
+}
+
 export default function Product() {
   const [selectOption, setSelectOption] = useState("");
-  const { currentUser, dbUser } = useAuth();
+  const { currentUser } = useAuth();
   const { products } = useProduct();
   const param = useParams();
   const product: { [key: string]: any } = products.find(
@@ -16,9 +20,14 @@ export default function Product() {
   );
   const [quantity, setQuantity] = useState<number>(1);
   const { setDb } = useDb();
+  const { toggleCart } = useOutletContext<OutletConText>();
 
   const onClikcCart = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectOption === "") {
+      return alert("옵션을 선택해주세요");
+    }
+    toggleCart();
     await setDb({
       Route: `cart/${currentUser.uid}`,
       data: [{ key: product.key, quantity, selectOption }],
@@ -73,13 +82,21 @@ export default function Product() {
                   옵션 선택
                 </option>
 
-                {product.option[0]
+                {product.option.map((option: string, index: number) => {
+                  if (option === "") return;
+                  return (
+                    <option key={option + index} value={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+                {/* {product.option[0]
                   .split(",")
                   .map((data: string, index: number) => (
                     <option key={data + index} value={data}>
                       {data}
                     </option>
-                  ))}
+                  ))} */}
               </select>
             </li>
             <li className="flex items-center w-full">
@@ -111,6 +128,9 @@ export default function Product() {
                 </div>
               </div>
               <span className="ml-[2ch]">개</span>
+            </li>
+            <li>
+              <h5>{product.description}</h5>
             </li>
           </ul>
 

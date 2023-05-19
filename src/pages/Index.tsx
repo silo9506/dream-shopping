@@ -27,10 +27,14 @@ export default function Index() {
         onModal={onModal}
       />
       <Header toggleModal={toggleModal} toggleCart={toggleCart} />
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl py-4 mx-auto">
         <Modal onModal={onModal} modal={modal} toggleModal={toggleModal} />
         <Cart onCart={onCart} toggleCart={toggleCart} />
-        <Outlet />
+        <Outlet
+          context={{
+            toggleCart: toggleCart,
+          }}
+        />
       </div>
     </div>
   );

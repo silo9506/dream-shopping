@@ -13,7 +13,7 @@ export default function Home() {
       <div className="h-60">
         <Carousel items={items} />
       </div>
-      <div className="grid w-full grid-cols-4 gap-4">
+      <div className="grid w-full grid-cols-3 gap-4 py-4 sm:grid-cols-4">
         {products && (
           <>
             {products.map((product) => (

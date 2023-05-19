@@ -1,8 +1,6 @@
-import CarouselItem from "components/atoms/CarouselItem";
 import useThrottle from "util/useThrottle";
 import React, { useState, useEffect } from "react";
 import { MdCancel } from "react-icons/md";
-import { BsDot } from "react-icons/bs";
 interface props {
   items: string[];
   deleteImg?: (url: string) => void;
@@ -84,7 +82,7 @@ export default function Carousel({ items, deleteImg }: props) {
                 className="absolute top-2 right-2"
               />
             )}
-            <img className="w-full h-full" src={item} />
+            <img className="w-full h-full object-fit: cover" src={item} />
           </div>
         ))}
       </div>
