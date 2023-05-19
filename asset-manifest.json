@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/dream-shopping/static/css/main.92a5f3ed.css",
+    "main.js": "/dream-shopping/static/js/main.65a25674.js",
+    "static/media/banner03.png": "/dream-shopping/static/media/banner03.31b85796c7662365e136.png",
+    "static/media/banner02.png": "/dream-shopping/static/media/banner02.acb2377bbba72e6443a7.png",
+    "static/media/banner01.png": "/dream-shopping/static/media/banner01.d9d20df4a1d1d51c2302.png",
+    "index.html": "/dream-shopping/index.html",
+    "main.92a5f3ed.css.map": "/dream-shopping/static/css/main.92a5f3ed.css.map",
+    "main.65a25674.js.map": "/dream-shopping/static/js/main.65a25674.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.92a5f3ed.css",
+    "static/js/main.65a25674.js"
+  ]
+}
