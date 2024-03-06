@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { off, onValue, ref } from "firebase/database";
 import { DB } from "myfirebase";
+import Spinner from "components/atoms/Spinner";
 
 interface ProductContextValue {
   isloding: boolean;
@@ -9,7 +10,7 @@ interface ProductContextValue {
 
 const productContext = createContext<ProductContextValue>({
   isloding: true,
-  products: [],
+  products: []
 });
 export const useProduct = () => useContext(productContext);
 
@@ -41,6 +42,7 @@ export const ProductProvider = ({ children }: props) => {
 
   return (
     <productContext.Provider value={value}>
+      {isloding && <Spinner />}
       {!isloding && children}
     </productContext.Provider>
   );
